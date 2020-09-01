@@ -20,4 +20,11 @@ mkdir -p "${WORK_DIR}"
 cd "${WORK_DIR}"
 
 export LOG_DIR=${WORK_DIR}
-exec psbatch "${EPREFIX}" "${ARCH}" "${GPU}:1" 12G 1 2 00:30:00 --job-name=test-prefix bash "${SELF_DIR}"/test-prefix.sh
+
+MEM=12G
+TIME=00:30:00
+CMD="bash \"${SELF_DIR}\"/test-prefix.sh"
+exec psbatch "${EPREFIX}" "${ARCH}" "${GPU}:1" "${MEM}" 1 2 "${TIME}" \
+	--job-name=test-prefix-singlenode "${CMD}" 1
+exec psbatch "${EPREFIX}" "${ARCH}" "${GPU}:1" "${MEM}" 2 2 "${TIME}" \
+	--job-name=test-prefix-multinode "${CMD}" 2
